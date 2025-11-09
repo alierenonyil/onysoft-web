@@ -7,6 +7,9 @@
 # @website www.onysoft.com.tr
 # ============================================
 
+# DirectoryIndex - Ana sayfa index.php olarak ayarla
+DirectoryIndex index.php index.html
+
 # Apache 2.4+
 <IfModule mod_rewrite.c>
     RewriteEngine On
@@ -21,22 +24,17 @@
     # RewriteRule ^(.*)$ https://www.%{HTTP_HOST}/$1 [R=301,L]
 
     # URL Rewriting - Ürün Detay
-    RewriteRule ^urun/([a-z0-9-]+)$ urun-detay.php?slug=$1 [L,QSA]
+    RewriteRule ^urun/([a-z0-9-]+)/?$ urun-detay.php?slug=$1 [L,QSA]
 
     # URL Rewriting - Kategori
-    RewriteRule ^kategori/([a-z0-9-]+)$ urunler.php?kategori=$1 [L,QSA]
+    RewriteRule ^kategori/([a-z0-9-]+)/?$ kategori.php?slug=$1 [L,QSA]
 
     # URL Rewriting - Sayfa
-    RewriteRule ^sayfa/([a-z0-9-]+)$ sayfa.php?slug=$1 [L,QSA]
+    RewriteRule ^sayfa/([a-z0-9-]+)/?$ sayfa.php?slug=$1 [L,QSA]
 
     # index.php'yi gizle
     RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /index\.php
     RewriteRule ^index\.php$ / [R=301,L]
-
-    # Var olmayan dosyaları index.php'ye yönlendir
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    # RewriteRule ^(.*)$ index.php?url=$1 [L,QSA]
 </IfModule>
 
 # ============================================

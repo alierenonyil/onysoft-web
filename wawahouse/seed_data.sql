@@ -15,7 +15,7 @@ USE `wawahousesql`;
 -- Email: admin@wawahouse.com
 -- Şifre: admin123
 INSERT INTO `kullanicilar` (`ad_soyad`, `email`, `sifre`, `rol`, `aktif`, `email_dogrulandi`) VALUES
-('Admin User', 'admin@wawahouse.com', '$argon2id$v=19$m=65536,t=4,p=1$dUk0aE5SczY4QkdxcVhyRQ$mTwH+QN1YvF8GJvzKqY9Gm1xqXN4kN1pYtLzXlHxYwQ', 'admin', 1, 1);
+('Admin User', 'admin@wawahouse.com', '$2y$12$W6V0l5a4hNRC8iD65lRgkuQ/Hp.AgvdRuGHHEm99zHYzStT2Qfqtq', 'admin', 1, 1);
 
 -- ============================================
 -- Kategoriler (Bebek Kategorileri)
