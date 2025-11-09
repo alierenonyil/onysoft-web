@@ -1,10 +1,14 @@
 <?php
 $pageTitle = 'Kupon Yönetimi';
-require_once __DIR__ . '/includes/header.php';
+
+// POST/GET işlemlerini header'dan ÖNCE yap (headers already sent hatasını önlemek için)
+require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/includes/auth.php';
+require_once __DIR__ . '/includes/functions.php';
 
 if (isset($_GET['delete'])) {
     db()->delete('kuponlar', 'id = :id', ['id' => (int)$_GET['delete']]);
-    success('Kupon silindi!');
+    setFlash('success', 'Kupon silindi!');
     redirect(url('admin/kuponlar.php'));
 }
 
@@ -21,9 +25,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ];
 
     db()->insert('kuponlar', $data);
-    success('Kupon oluşturuldu!');
+    setFlash('success', 'Kupon oluşturuldu!');
     redirect(url('admin/kuponlar.php'));
 }
+
+require_once __DIR__ . '/includes/header.php';
 
 $coupons = db()->fetchAll("SELECT * FROM kuponlar ORDER BY created_at DESC");
 ?>

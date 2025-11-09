@@ -8,7 +8,11 @@
  */
 
 $pageTitle = 'Kategori Yönetimi';
-require_once __DIR__ . '/includes/header.php';
+
+// POST/GET işlemlerini header'dan ÖNCE yap (headers already sent hatasını önlemek için)
+require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/includes/auth.php';
+require_once __DIR__ . '/includes/functions.php';
 
 // Silme işlemi
 if (isset($_GET['delete'])) {
@@ -17,11 +21,11 @@ if (isset($_GET['delete'])) {
     // Alt kategorisi var mı kontrol et
     $hasChildren = db()->count('kategoriler', 'parent_id = ?', [$id]);
     if ($hasChildren > 0) {
-        error('Bu kategorinin alt kategorileri var, önce onları silin!');
+        setFlash('error', 'Bu kategorinin alt kategorileri var, önce onları silin!');
     } else {
         db()->delete('kategoriler', 'id = :id', ['id' => $id]);
         logAdminAction('delete', 'kategoriler', $id, null, 'Kategori silindi');
-        success('Kategori silindi!');
+        setFlash('success', 'Kategori silindi!');
     }
     redirect(url('admin/kategoriler.php'));
 }
@@ -51,15 +55,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Güncelleme
         db()->update('kategoriler', $data, 'id = :id', ['id' => $id]);
         logAdminAction('update', 'kategoriler', $id, null, 'Kategori güncellendi');
-        success('Kategori güncellendi!');
+        setFlash('success', 'Kategori güncellendi!');
     } else {
         // Ekleme
         $newId = db()->insert('kategoriler', $data);
         logAdminAction('insert', 'kategoriler', $newId, null, 'Yeni kategori eklendi');
-        success('Kategori eklendi!');
+        setFlash('success', 'Kategori eklendi!');
     }
     redirect(url('admin/kategoriler.php'));
 }
+
+require_once __DIR__ . '/includes/header.php';
 
 // Düzenleme için kategori getir
 $editCategory = null;

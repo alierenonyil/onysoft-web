@@ -7,23 +7,14 @@
  * @author Onysoft Veri Merkezi A.Ş.
  */
 
+// POST/GET işlemlerini header'dan ÖNCE yap (headers already sent hatasını önlemek için)
+require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/includes/auth.php';
+require_once __DIR__ . '/includes/functions.php';
+
 $siparisId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-$siparis = db()->fetchOne("
-    SELECT s.*, k.ad_soyad, k.email, k.telefon
-    FROM siparisler s
-    LEFT JOIN kullanicilar k ON k.id = s.kullanici_id
-    WHERE s.id = ?
-", [$siparisId]);
 
-if (!$siparis) {
-    error('Sipariş bulunamadı!');
-    redirect(url('admin/siparisler.php'));
-}
-
-$pageTitle = 'Sipariş Detay: ' . $siparis['siparis_no'];
-require_once __DIR__ . '/includes/header.php';
-
-// Durum güncelleme
+// Durum güncelleme (redirect içeriyor, header'dan önce olmalı)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
     $yeniDurum = clean($_POST['durum']);
     $kargoTakipNo = clean($_POST['kargo_takip_no'] ?? '');
@@ -35,9 +26,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
 
     db()->update('siparisler', $data, 'id = :id', ['id' => $siparisId]);
     logAdminAction('update', 'siparisler', $siparisId, null, 'Sipariş durumu güncellendi');
-    success('Sipariş güncellendi!');
+    setFlash('success', 'Sipariş güncellendi!');
     redirect(url('admin/siparis-detay.php?id=' . $siparisId));
 }
+
+$siparis = db()->fetchOne("
+    SELECT s.*, k.ad_soyad, k.email, k.telefon
+    FROM siparisler s
+    LEFT JOIN kullanicilar k ON k.id = s.kullanici_id
+    WHERE s.id = ?
+", [$siparisId]);
+
+if (!$siparis) {
+    setFlash('error', 'Sipariş bulunamadı!');
+    redirect(url('admin/siparisler.php'));
+}
+
+$pageTitle = 'Sipariş Detay: ' . $siparis['siparis_no'];
+require_once __DIR__ . '/includes/header.php';
 
 // Sipariş kalemleri
 $items = db()->fetchAll("SELECT * FROM siparis_detaylari WHERE siparis_id = ?", [$siparisId]);

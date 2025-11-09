@@ -1,8 +1,10 @@
 <?php
 $pageTitle = 'Site Ayarları';
-require_once __DIR__ . '/includes/header.php';
 
+// POST işlemlerini header'dan ÖNCE yap (headers already sent hatasını önlemek için)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    require_once __DIR__ . '/../config.php';
+
     foreach ($_POST as $key => $value) {
         if ($key === 'csrf_token') continue;
 
@@ -15,9 +17,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    success('Ayarlar kaydedildi!');
+    setFlash('success', 'Ayarlar kaydedildi!');
     redirect(url('admin/ayarlar.php'));
 }
+
+require_once __DIR__ . '/includes/header.php';
 
 $settings = [];
 $results = db()->fetchAll("SELECT * FROM ayarlar");

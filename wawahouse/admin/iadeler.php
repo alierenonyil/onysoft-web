@@ -1,6 +1,10 @@
 <?php
 $pageTitle = 'İade Talepleri';
-require_once __DIR__ . '/includes/header.php';
+
+// POST işlemlerini header'dan ÖNCE yap (headers already sent hatasını önlemek için)
+require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/includes/auth.php';
+require_once __DIR__ . '/includes/functions.php';
 
 if (isset($_POST['update_status'])) {
     $iadeId = (int)$_POST['iade_id'];
@@ -12,9 +16,11 @@ if (isset($_POST['update_status'])) {
         'admin_notu' => $adminNotu
     ], 'id = :id', ['id' => $iadeId]);
 
-    success('İade durumu güncellendi!');
+    setFlash('success', 'İade durumu güncellendi!');
     redirect(url('admin/iadeler.php'));
 }
+
+require_once __DIR__ . '/includes/header.php';
 
 $iadeler = db()->fetchAll("
     SELECT i.*, s.siparis_no, k.ad_soyad

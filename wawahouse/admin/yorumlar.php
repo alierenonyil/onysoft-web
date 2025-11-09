@@ -1,18 +1,24 @@
 <?php
 $pageTitle = 'Yorum Yönetimi';
-require_once __DIR__ . '/includes/header.php';
+
+// GET işlemlerini header'dan ÖNCE yap (headers already sent hatasını önlemek için)
+require_once __DIR__ . '/../config.php';
+require_once __DIR__ . '/includes/auth.php';
+require_once __DIR__ . '/includes/functions.php';
 
 if (isset($_GET['approve'])) {
     db()->update('yorumlar', ['onay' => 1], 'id = :id', ['id' => (int)$_GET['approve']]);
-    success('Yorum onaylandı!');
+    setFlash('success', 'Yorum onaylandı!');
     redirect(url('admin/yorumlar.php'));
 }
 
 if (isset($_GET['delete'])) {
     db()->delete('yorumlar', 'id = :id', ['id' => (int)$_GET['delete']]);
-    success('Yorum silindi!');
+    setFlash('success', 'Yorum silindi!');
     redirect(url('admin/yorumlar.php'));
 }
+
+require_once __DIR__ . '/includes/header.php';
 
 $comments = db()->fetchAll("
     SELECT y.*, u.ad_soyad, ur.ad as urun_ad
