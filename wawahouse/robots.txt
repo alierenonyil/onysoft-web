@@ -1,0 +1,25 @@
+# WawaHouse - Bebek Giyim E-Ticaret Sitesi
+# Powered by Onysoft Veri Merkezi A.Ş.
+
+User-agent: *
+Allow: /
+
+# Admin panelini engelle
+Disallow: /admin/
+Disallow: /includes/
+Disallow: /vendor/
+
+# Dosya tiplerini engelle
+Disallow: /*.sql$
+Disallow: /*.log$
+Disallow: /*.env$
+
+# Sepet ve kullanıcı sayfalarını engelle
+Disallow: /sepet.php
+Disallow: /odeme.php
+Disallow: /hesabim.php
+Disallow: /giris.php
+Disallow: /kayit.php
+
+# Arama motorları için
+Sitemap: https://staravcisi.com/sitemap.xml

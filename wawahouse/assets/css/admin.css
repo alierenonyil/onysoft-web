@@ -1,0 +1,56 @@
+/**
+ * WawaHouse E-Ticaret Sistemi
+ * Admin Panel CSS
+ *
+ * @package WawaHouse
+ * @author Onysoft Veri Merkezi A.Ş.
+ * @website www.onysoft.com.tr
+ */
+
+/* Admin CSS - Header dosyasında inline olarak eklenmiştir */
+/* Bu dosya gelecekte ek stil eklemeleri için kullanılabilir */
+
+.ck-editor__editable {
+    min-height: 300px;
+}
+
+.image-preview {
+    max-width: 200px;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin: 10px;
+}
+
+.dropzone {
+    border: 2px dashed #0d6efd;
+    border-radius: 10px;
+    padding: 40px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.dropzone:hover {
+    background: rgba(13, 110, 253, 0.05);
+}
+
+.color-picker-input {
+    width: 60px;
+    height: 40px;
+    border: none;
+    cursor: pointer;
+}
+
+.variant-item {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.admin-log-item {
+    border-left: 4px solid #0d6efd;
+    padding-left: 15px;
+    margin-bottom: 15px;
+}

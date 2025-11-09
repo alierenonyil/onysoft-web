@@ -1,0 +1,37 @@
+{
+  "name": "onysoft/wawahouse",
+  "description": "WawaHouse - Bebek Giyim E-Ticaret Sistemi",
+  "type": "project",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Onysoft Veri Merkezi A.Ş.",
+      "email": "info@onysoft.com.tr",
+      "homepage": "https://www.onysoft.com.tr"
+    }
+  ],
+  "require": {
+    "php": ">=8.0",
+    "phpmailer/phpmailer": "^6.8",
+    "phpoffice/phpspreadsheet": "^1.29",
+    "tecnickcom/tcpdf": "^6.6"
+  },
+  "require-dev": {
+    "symfony/var-dumper": "^6.3"
+  },
+  "autoload": {
+    "psr-4": {
+      "WawaHouse\\": "includes/"
+    },
+    "files": [
+      "config.php"
+    ]
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
+    "sort-packages": true
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
+}
