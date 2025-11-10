@@ -50,16 +50,16 @@
         }
 
         // Add to Cart
-        window.addToCart = function(productId, variantId = null) {
+        window.addToCart = function(productId, variantId = null, quantity = 1) {
             showLoading();
 
             $.ajax({
-                url: '/ajax/add-to-cart.php',
+                url: 'ajax/add-to-cart.php',
                 method: 'POST',
                 data: {
-                    product_id: productId,
-                    variant_id: variantId,
-                    quantity: 1
+                    urun_id: productId,
+                    varyant_id: variantId,
+                    miktar: quantity
                 },
                 dataType: 'json',
                 success: function(response) {
@@ -67,13 +67,17 @@
                     if (response.success) {
                         showToast('Ürün sepete eklendi!', 'success');
                         // Update cart count
+                        if (response.cart_count) {
+                            $('.cart-badge').text(response.cart_count).show();
+                        }
                         updateCartCount();
                     } else {
                         showToast(response.message || 'Bir hata oluştu', 'error');
                     }
                 },
-                error: function() {
+                error: function(xhr) {
                     hideLoading();
+                    console.error('AJAX Error:', xhr.responseText);
                     showToast('Bir hata oluştu', 'error');
                 }
             });
@@ -82,12 +86,12 @@
         // Update Cart Count
         function updateCartCount() {
             $.ajax({
-                url: '/ajax/cart-count.php',
+                url: 'ajax/get-cart-count.php',
                 method: 'GET',
                 dataType: 'json',
                 success: function(response) {
-                    if (response.count > 0) {
-                        $('.cart-badge').text(response.count).show();
+                    if (response.success && response.cart_count > 0) {
+                        $('.cart-badge').text(response.cart_count).show();
                     } else {
                         $('.cart-badge').hide();
                     }
@@ -95,17 +99,20 @@
             });
         }
 
+        // Initialize cart count on page load
+        updateCartCount();
+
         // Remove from Cart
         $(document).on('click', '.remove-from-cart', function(e) {
             e.preventDefault();
-            const cartId = $(this).data('cart-id');
+            const sepetId = $(this).data('sepet-id');
 
             if (confirm('Bu ürünü sepetten çıkarmak istediğinize emin misiniz?')) {
                 showLoading();
                 $.ajax({
-                    url: '/ajax/remove-from-cart.php',
+                    url: 'ajax/remove-from-cart.php',
                     method: 'POST',
-                    data: { cart_id: cartId },
+                    data: { sepet_id: sepetId },
                     dataType: 'json',
                     success: function(response) {
                         hideLoading();
@@ -125,16 +132,16 @@
 
         // Update Cart Quantity
         $(document).on('change', '.cart-quantity', function() {
-            const cartId = $(this).data('cart-id');
-            const quantity = $(this).val();
+            const sepetId = $(this).data('sepet-id');
+            const miktar = $(this).val();
 
             showLoading();
             $.ajax({
-                url: '/ajax/update-cart.php',
+                url: 'ajax/update-cart.php',
                 method: 'POST',
                 data: {
-                    cart_id: cartId,
-                    quantity: quantity
+                    sepet_id: sepetId,
+                    miktar: miktar
                 },
                 dataType: 'json',
                 success: function(response) {
@@ -155,19 +162,41 @@
         // Add to Favorites
         window.addToFavorites = function(productId) {
             $.ajax({
-                url: '/ajax/add-to-favorites.php',
+                url: 'ajax/add-to-favorites.php',
                 method: 'POST',
-                data: { product_id: productId },
+                data: { urun_id: productId },
                 dataType: 'json',
                 success: function(response) {
                     if (response.success) {
                         showToast('Favorilere eklendi!', 'success');
+                        $(`.fav-btn[data-product-id="${productId}"]`).addClass('active');
                     } else {
                         if (response.login_required) {
-                            window.location.href = '/giris.php';
+                            window.location.href = 'giris.php';
                         } else {
                             showToast(response.message, 'error');
                         }
+                    }
+                },
+                error: function() {
+                    showToast('Bir hata oluştu', 'error');
+                }
+            });
+        };
+
+        // Remove from Favorites
+        window.removeFromFavorites = function(productId) {
+            $.ajax({
+                url: 'ajax/remove-from-favorites.php',
+                method: 'POST',
+                data: { urun_id: productId },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.success) {
+                        showToast('Favorilerden çıkarıldı!', 'success');
+                        $(`.fav-btn[data-product-id="${productId}"]`).removeClass('active');
+                    } else {
+                        showToast(response.message, 'error');
                     }
                 },
                 error: function() {
@@ -183,7 +212,7 @@
             const email = $(this).find('input[name="email"]').val();
 
             $.ajax({
-                url: '/ajax/newsletter-subscribe.php',
+                url: 'ajax/newsletter-subscribe.php',
                 method: 'POST',
                 data: { email: email },
                 dataType: 'json',

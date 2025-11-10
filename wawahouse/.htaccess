@@ -13,15 +13,22 @@ DirectoryIndex index.php index.html
 # Apache 2.4+
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    RewriteBase /
 
-    # HTTPS yönlendirmesi (Canlıda aktif edilmeli)
+    # RewriteBase otomatik tespit
+    # Eğer site doğrudan root'taysa / kullanılır
+    # Eğer alt dizindeyse (örn: /wawahouse/) otomatik algılanır
+
+    # HTTPS yönlendirmesi (Canlıda aktif edilebilir)
     # RewriteCond %{HTTPS} off
     # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-    # WWW yönlendirmesi
+    # WWW yönlendirmesi (Gerekirse aktif et)
     # RewriteCond %{HTTP_HOST} !^www\.
     # RewriteRule ^(.*)$ https://www.%{HTTP_HOST}/$1 [R=301,L]
+
+    # Mevcut dosya veya dizin değilse rewrite kurallarını uygula
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
 
     # URL Rewriting - Ürün Detay
     RewriteRule ^urun/([a-z0-9-]+)/?$ urun-detay.php?slug=$1 [L,QSA]
@@ -32,9 +39,9 @@ DirectoryIndex index.php index.html
     # URL Rewriting - Sayfa
     RewriteRule ^sayfa/([a-z0-9-]+)/?$ sayfa.php?slug=$1 [L,QSA]
 
-    # index.php'yi gizle
-    RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /index\.php
-    RewriteRule ^index\.php$ / [R=301,L]
+    # index.php'yi gizle (opsiyonel)
+    RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /.*index\.php
+    RewriteRule ^(.*)index\.php$ /$1 [R=301,L]
 </IfModule>
 
 # ============================================
