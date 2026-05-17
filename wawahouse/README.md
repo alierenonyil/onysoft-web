@@ -292,6 +292,12 @@ Projeyi canlı sunucuya taşırken:
 
 ---
 
+## 👥 Katkıda Bulunanlar (Contributors)
+
+- **Ali Eren Onyıl** — [@alierenonyil](https://github.com/alierenonyil) — Tasarım, geliştirme, mimari ve test
+
+---
+
 ## 📞 Destek ve İletişim
 
 **Geliştirici:**
